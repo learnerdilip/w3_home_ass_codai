@@ -21,7 +21,7 @@ export default class QuoteSearcher extends Component {
         const quoData = data.results.map(item => {
           return { ...item, liking: 0 };
         });
-        console.log("DATA COPY", quoData);
+        // console.log("DATA COPY", quoData);
         this.setState({
           fetching: false,
           quotes: quoData
@@ -30,20 +30,50 @@ export default class QuoteSearcher extends Component {
       .catch(err => Error);
   }
 
-  handleLike = (likeid, id) => {
-    console.log("I was liked", likeid, id, this.state.likes);
-    if (likeid === 1) {
-      this.setState({
-        likes: this.state.likes + 1
+  //count the likes and dislikes after each like/dislike
+  //and update in local state
+  //this following function returns the updated state
+  likecount = (arr, likeid, id) => {
+    const newArray = arr.map(item => {
+      const changedelement = arr.find(element => element._id === id);
+      if (changedelement._id === item._id) {
+        return { ...item, liking: likeid };
+      } else {
+        return { ...item };
+      }
+    });
+    return newArray;
+  };
+  countliked = (arr, likeid) => {
+    const lik = arr.reduce((agg, item) => {
+      if (item.liking === likeid) {
+        return agg + 1;
+      } else {
+        return agg;
+      }
+    }, 0);
+    console.log(lik);
+    return lik;
+  };
+
+  handleLike = async (likeid, id) => {
+    const newA = await this.likecount(this.state.quotes, likeid, id);
+    const likeNum = await this.countliked(this.state.quotes, 2);
+    if (likeid === 2) {
+      await this.setState({
+        likes: likeNum,
+        quotes: newA
       });
     }
   };
 
-  handleDislike = (likeid, id) => {
-    console.log("I was disliked", likeid, id);
+  handleDislike = async (likeid, id) => {
+    const newA = await this.likecount(this.state.quotes, likeid, id);
+    const likeNum = await this.countliked(this.state.quotes, 3);
     if (likeid === 3) {
-      this.setState({
-        dislikes: this.state.dislikes + 1
+      await this.setState({
+        dislikes: likeNum,
+        quotes: newA
       });
     }
   };
@@ -63,7 +93,6 @@ export default class QuoteSearcher extends Component {
         const quoData = data.results.map(item => {
           return { ...item, liking: 0 };
         });
-        console.log("DATA COPY", quoData);
         this.setState({
           fetching: false,
           quotes: quoData
@@ -79,7 +108,7 @@ export default class QuoteSearcher extends Component {
   };
 
   render() {
-    // console.log("THE SEARCHER STATE IS:", this.state);
+    console.log("THE SEARCHER STATE IS:", this.state);
     const quoteList = this.state.quotes.map(quote => (
       <Quote
         key={quote._id}
@@ -105,7 +134,13 @@ export default class QuoteSearcher extends Component {
         <h2>
           Liked: {this.state.likes} / Disliked: {this.state.dislikes}
         </h2>
-        {this.state.fetching ? <h4>Loading...</h4> : quoteList}
+        {this.state.fetching ? (
+          <h4>Loading...</h4>
+        ) : quoteList.length === 0 ? (
+          <h2>SORRY NO RESULTS FOR YOUR WORD </h2>
+        ) : (
+          quoteList
+        )}
       </div>
     );
   }

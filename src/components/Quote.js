@@ -4,15 +4,17 @@ export default class Quote extends Component {
   state = {
     like: 1
   };
-  handleLikes = () => {
-    this.setState({
+
+  // using async to fix the problem of setState late updation of data
+  handleLikes = async () => {
+    await this.setState({
       like: 2
     });
     this.props.setLiked(this.state.like, this.props.id);
   };
 
-  handleDislikes = () => {
-    this.setState({
+  handleDislikes = async () => {
+    await this.setState({
       like: 3
     });
     this.props.setDisliked(this.state.like, this.props.id);
