@@ -52,7 +52,9 @@ export default class QuoteSearcher extends Component {
     e.preventDefault();
     const searchterm = this.state.search;
     this.setState({
-      fetching: true
+      fetching: true,
+      likes: 0,
+      dislikes: 0
     });
     fetch(`https://quote-garden.herokuapp.com/quotes/search/${searchterm}`)
       .then(response => response.json())
