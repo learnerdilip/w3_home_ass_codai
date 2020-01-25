@@ -2,24 +2,33 @@ import React, { Component } from "react";
 
 export default class Quote extends Component {
   state = {
-    likes: 0,
-    dislikes: 0
+    like: 1
   };
   handleLikes = () => {
-    // console.log(this.props.quoteText);
-    const styleQuote = document.querySelector("h3");
-    styleQuote.style.color = "green";
+    this.setState({
+      like: 2
+    });
   };
 
   handleDislikes = () => {
-    console.log("you disliked");
-    const styleQuote = document.querySelector("h3");
-    styleQuote.style.color = "red";
+    this.setState({
+      like: 3
+    });
   };
   render() {
     return (
       <div>
-        <h3>{this.props.quoteText}</h3>
+        <h3
+          style={
+            this.state.like === 1
+              ? { color: "black" }
+              : this.state.like === 2
+              ? { color: "green" }
+              : { color: "red" }
+          }
+        >
+          {this.props.quoteText}
+        </h3>
         <h5>{this.props.quoteAuthor}</h5>
         <button onClick={this.handleLikes}>:)</button>
         <button onClick={this.handleDislikes}>:(</button>
