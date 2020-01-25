@@ -8,16 +8,17 @@ export default class Quote extends Component {
     this.setState({
       like: 2
     });
-    this.props.setLiked(this.props.likedness, this.props.id);
+    this.props.setLiked(this.state.like, this.props.id);
   };
 
   handleDislikes = () => {
     this.setState({
       like: 3
     });
-    this.props.setDisliked(this.props.dislikedness, this.props.id);
+    this.props.setDisliked(this.state.like, this.props.id);
   };
   render() {
+    // console.log("QUOTE STATE", this.state);
     return (
       <div>
         <h3
