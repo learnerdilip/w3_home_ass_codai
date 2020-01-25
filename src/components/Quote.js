@@ -6,11 +6,15 @@ export default class Quote extends Component {
     dislikes: 0
   };
   handleLikes = () => {
-    console.log("you liked");
+    // console.log(this.props.quoteText);
+    const styleQuote = document.querySelector("h3");
+    styleQuote.style.color = "green";
   };
 
   handleDislikes = () => {
     console.log("you disliked");
+    const styleQuote = document.querySelector("h3");
+    styleQuote.style.color = "red";
   };
   render() {
     return (
