@@ -8,12 +8,14 @@ export default class Quote extends Component {
     this.setState({
       like: 2
     });
+    this.props.setLiked(this.props.likedness, this.props.id);
   };
 
   handleDislikes = () => {
     this.setState({
       like: 3
     });
+    this.props.setDisliked(this.props.dislikedness, this.props.id);
   };
   render() {
     return (
@@ -24,7 +26,7 @@ export default class Quote extends Component {
               ? { color: "black" }
               : this.state.like === 2
               ? { color: "green" }
-              : { color: "red" }
+              : { color: "red", textDecoration: "line-through" }
           }
         >
           {this.props.quoteText}

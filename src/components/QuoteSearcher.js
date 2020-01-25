@@ -4,7 +4,9 @@ import Quote from "./Quote";
 export default class QuoteSearcher extends Component {
   state = {
     quotes: [],
-    fetching: false
+    fetching: false,
+    likedness: 0,
+    dislikedness: 0
   };
 
   componentDidMount() {
@@ -14,16 +16,33 @@ export default class QuoteSearcher extends Component {
     fetch("https://quote-garden.herokuapp.com/quotes/search/tree")
       .then(response => response.json())
       .then(data => {
-        const quoData = data.results;
-        console.log("DATA", quoData);
+        //adding the additional keys for likedness and dislikedness
+        const quoData = data.results.map(item => {
+          return { ...item, likedness: 0, dislikedness: 0 };
+        });
+        console.log("DATA COPY", quoData);
         this.setState({
-          quotes: quoData,
           fetching: false,
-          liked: 0,
-          disliked: 0
+          quotes: quoData
         });
       })
       .catch(err => Error);
+  }
+  handleLike(like, id) {
+    console.log("I was liked", like, id);
+    if (like === 2) {
+      this.setState({
+        likedness: this.state.likedness + 1
+      });
+    }
+  }
+  handleDislike(like, id) {
+    console.log("I was disliked", like, id);
+    if (like === 3) {
+      this.setState({
+        dislikedness: this.state.dislikedness + 1
+      });
+    }
   }
 
   render() {
@@ -34,16 +53,19 @@ export default class QuoteSearcher extends Component {
         id={quote._id}
         quoteText={quote.quoteText}
         quoteAuthor={quote.quoteAuthor}
+        likedness={quote.likedness}
+        dislikedness={quote.dislikedness}
+        setLiked={this.handleLike}
+        setDisliked={this.handleDislike}
       />
     ));
     return (
       <div>
         <h1>The quote Searcher App</h1>
         <h2>
-          Liked: {this.state.liked} / Disliked: {this.state.disliked}
+          Liked: {this.state.likedness} / Disliked: {this.state.dislikedness}
         </h2>
-        {this.state.fetching && <h4>Loading...</h4>}
-        {!this.state.fetching && quoteList}
+        {this.state.fetching ? <h4>Loading...</h4> : quoteList}
       </div>
     );
   }
